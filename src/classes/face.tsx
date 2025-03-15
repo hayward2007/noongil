@@ -1,0 +1,8 @@
+export default class Face {
+  static RIGHT_IRIS_INDICES = [473, 474, 475, 476, 477];
+  static LEFT_IRIS_INDICES = [468, 469, 470, 471, 472];
+  static RIGHT_EYE_INDICES = [33, 7, 163, 144, 145, 153, 154, 155, 133, 173, 157, 158, 159, 160, 161, 246];
+  static LEFT_EYE_INDICES = [263, 249, 390, 373, 374, 380, 381, 382, 362, 398, 384, 385, 386, 387, 388, 466];
+  static NOSE_TIP_INDEX = 4;
+  static FOREHEAD_INDEX = 10;
+}
