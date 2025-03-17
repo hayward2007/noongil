@@ -9,43 +9,6 @@ const FaceMeshGazeArrows: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [headPose, setHeadPose] = useState<{ roll: number; pitch: number; yaw: number }>({ roll: 0, pitch: 0, yaw: 0 });
 
-  function calculateHeadPose(landmarks: Array<{x: number, y: number, z: number}>) {
-    // Get relevant landmarks
-    // Typically: eyes, nose, and some points on the face contour
-    const leftEye = landmarks[33];  // Left eye corner
-    const rightEye = landmarks[263]; // Right eye corners
-    const nose = landmarks[1];      // Nose tip
-    const leftCheek = landmarks[50]; // Left cheek
-    const rightCheek = landmarks[280]; // Right cheek
-    
-    // Calculate roll (Z-axis rotation - head tilt left/right)
-    const deltaY = rightEye.y - leftEye.y;
-    const deltaX = rightEye.x - leftEye.x;
-    const roll = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-    
-    // Calculate pitch (X-axis rotation - looking up/down)
-    const deltaZ = nose.z - ((leftEye.z + rightEye.z) / 2);
-    const eyeDistance = Math.sqrt(
-      Math.pow(rightEye.x - leftEye.x, 2) + 
-      Math.pow(rightEye.y - leftEye.y, 2)
-    );
-    const pitch = Math.atan2(deltaZ, eyeDistance) * (180 / Math.PI);
-    
-    // Calculate yaw (Y-axis rotation - turning head left/right)
-    const leftDist = Math.sqrt(
-      Math.pow(nose.x - leftCheek.x, 2) + 
-      Math.pow(nose.y - leftCheek.y, 2)
-    );
-    const rightDist = Math.sqrt(
-      Math.pow(nose.x - rightCheek.x, 2) + 
-      Math.pow(nose.y - rightCheek.y, 2)
-    );
-    const yawRatio = leftDist / rightDist;
-    const yaw = Math.atan2(1 - yawRatio, 1 + yawRatio) * (180 / Math.PI) * 2;
-    
-    return { roll, pitch, yaw };
-  }
-
   useEffect(() => {
     const setupFaceMesh = async () => {
       const facemesh = await import("@mediapipe/face_mesh");
@@ -96,7 +59,7 @@ const FaceMeshGazeArrows: React.FC = () => {
             canvasCtx,
             landmarks,
             facemesh.FACEMESH_CONTOURS,
-            { color: "#000", lineWidth: 2 }
+            { color: "#F00", lineWidth: 2 }
           );
 
           drawFaceOrientationAxes(canvasCtx, landmarks[1], headPose.roll, headPose.pitch, headPose.yaw);
