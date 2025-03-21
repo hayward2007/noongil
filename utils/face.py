@@ -29,29 +29,27 @@ class Face:
         for temp in self.result.multi_face_landmarks:
             self.landmarks = [(lm.x, lm.y, lm.z) for lm in temp.landmark]
         
-        self.nose_end = self.__return_point(4)
-        self.upper_spot = self.__return_point(10)
-        self.lower_spot = self.__return_point(152)
-        self.mid_spot = self.__return_center(10, 152)
+        self.nose_end = self.return_point(4)
+        self.upper_spot = self.return_point(10)
+        self.lower_spot = self.return_point(152)
+        self.mid_spot = self.return_center(10, 152)
         
         self.coordinate = self.calculate_coordinate()
         self.projected_coordinate = self.project_coordinate(self.coordinate)
         
-        # self.nose_end = (int(landmarks[4][0] * self.frame_width), int(landmarks[4][1] * self.frame_height))
-        # self.upper_spot = (int(landmarks[10][0] * self.frame_width), int(landmarks[10][1] * self.frame_height))
-        # self.lower_spot = (int(landmarks[152][0] * self.frame_width), int(landmarks[152][1] * self.frame_height))
-        # self.mid_spot = ((self.upper_spot[0] + self.lower_spot[0])//2, (self.upper_spot[1] + self.lower_spot[1])//2)
-        
-    def __return_point(self, index: int):
+    def return_point(self, index: int):
         return (int(self.landmarks[index][0] * self.frame_width), int(self.landmarks[index][1] * self.frame_height))
     
-    def __return_center(self, index1: int, index2: int):
+    def return_center(self, index1: int, index2: int):
         return (int((self.landmarks[index1][0] + self.landmarks[index2][0]) * self.frame_width / 2), int((self.landmarks[index1][1] + self.landmarks[index2][1]) * self.frame_height / 2))
     
     def visualize_coordinate(self, frame):
-        cv2.line(frame, self.mid_spot, self.projected_coordinate.z, (255, 0, 0), 6)
-        cv2.line(frame, self.mid_spot, self.projected_coordinate.y, (0, 255, 0), 6)
-        cv2.line(frame, self.mid_spot, self.projected_coordinate.x, (0, 0, 255), 6)
+        try:
+            cv2.line(frame, self.mid_spot, self.projected_coordinate.z, (255, 0, 0), 6)
+            cv2.line(frame, self.mid_spot, self.projected_coordinate.y, (0, 255, 0), 6)
+            cv2.line(frame, self.mid_spot, self.projected_coordinate.x, (0, 0, 255), 6)
+        except:
+            pass
         
     def visualize_coordinate_size(self, frame):
         cv2.putText(frame, f'[{self.coordinate.x[0]:.6f} {self.coordinate.x[1]:.6f} {self.coordinate.x[2]:.6f}]', (0,50), 0, 1, (255, 0, 0))
@@ -66,14 +64,6 @@ class Face:
         cv2.line(frame, (int(self.landmarks[33][0] * self.frame_width), int(self.landmarks[33][1] * self.frame_height)), (int(self.landmarks[4][0] * self.frame_width), int(self.landmarks[4][1] * self.frame_height)), (0, 255, 0), 2)
         cv2.line(frame, (int(self.landmarks[10][0] * self.frame_width), int(self.landmarks[10][1] * self.frame_height)), (int(self.landmarks[4][0] * self.frame_width), int(self.landmarks[4][1] * self.frame_height)), (0, 255, 0), 2)
         cv2.line(frame, (int(self.landmarks[152][0] * self.frame_width), int(self.landmarks[152][1] * self.frame_height)), (int(self.landmarks[4][0] * self.frame_width), int(self.landmarks[4][1] * self.frame_height)), (0, 255, 0), 2)
-        
-        # self.draw_line(frame, self.nose_end, self.mid_spot)
-        # self.draw_line(frame, self.upper_spot, self.lower_spot)
-        # self.draw_line(frame, self.nose_end, self.upper_spot)
-        # self.draw_line(frame, self.nose_end, self.lower_spot)
-    
-    # def draw_line(self, frame, start, end, color=(0, 255, 0)):
-    #     cv2.line(frame, (int(start[0] * self.frame_width), int(start[1] * self.frame_height)), (int(end[0] * self.frame_width), int(end[1] * self.frame_height)), color, 2)
     
     def calculate_coordinate(self):
         vector_x = [self.nose_end[0] - self.mid_spot[0], self.nose_end[1] - self.mid_spot[1], self.landmarks[4][2] - (self.landmarks[10][2] + self.landmarks[152][2])/2]

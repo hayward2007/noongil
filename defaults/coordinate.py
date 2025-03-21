@@ -8,6 +8,9 @@ class Coordinate:
         self.y = np.array(y_axis)
         if(z_axis is None): self.z = np.cross(self.x, self.y)
         else: self.z = np.array(z_axis)
+        
+    # def add_vector(self, vector):
+        # return np.array([self.x + vector[0], self.y + vector[1], self.z + vector[2]])
             
     def unify(self):
         self.x = Vector3D.unify(self.x)
